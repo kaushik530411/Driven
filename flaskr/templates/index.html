@@ -1,0 +1,90 @@
+<html>
+  <head>
+    <title>Driven</title>
+    <h1>Welcome to Driven</h1>
+    <p>Universal address portal for all</p>
+  </head>
+  <body>
+    <h2>Add Operations</h2>
+    <ol>
+      <li><a href="/users/add">Add a User</a></li>
+      <li><a href="/address/add">Add an Address for a user</a></li>
+      <li><a href="/vendors/add">Add a Vendor</a></li>
+      <li><a href="/addressvendorsmap/add">Add a Vendor for an Address</a></li>
+    </ol>
+    <h2>Remove Operations</h2>
+    <ol>
+      <li>
+        <form action="/users/remove" method=POST>
+          <label>User id </label>
+          <input name="user_id"/>
+          <input type=submit value="Remove a User."/>
+        </form>
+      </li>
+      <li>
+        <form action="/address/remove" method=POST>
+          <label>Address id </label>
+          <input name="address_id"/>
+          <input type=submit value="Remove an Address for a user."/>
+        </form>
+      </li>
+      <li>
+        <form action="/vendors/remove" method=POST>
+          <label>Vendor id </label>
+          <input name="vendor_id"/>
+          <input type=submit value="Remove a Vendor"/>
+        </form>
+      <li>
+        <form action="/addressvendorsmap/remove" method=GET>
+          <label>Vendor id</label>
+          <input name="vendor_id"/>
+          <label>Address id</label>
+          <input name="address_id"/>
+          <input type=submit value="Remove a Vendor for an Address"/>
+        </form>
+      </li>
+      <li>
+        <form action="users/addressvendorsmap/revoke" method=POST>
+          <label>Address id</label>
+          <input name="address_id"/>
+          <label>Vendor id</label>
+          <input name="vendor_id"/>
+          <input type=submit value="Revoke access for the Vendor."/>
+        </form>
+      </li>
+    </ol>
+    <h2>Views</h2>
+    <ol>
+      <li><a href="/users">Users</a></li>
+      <li><a href="/address">Address</a></li>
+      <li><a href="/vendors">Vendors</a></li>
+      <li><a href="/addressvendorsmap">AddressVendorsMap</a></li>
+    </ol>
+    <h2>Filtered Search</h2>
+    <ol>
+      <li>
+        <form action="/users/addresses" method=GET>
+          <label>User id</label>
+          <input name="user_id"/>
+          <input type=submit value="Addresses of the User."/>
+        </form>
+      </li>
+      <li>
+        <form action="/users/address/vendors" method=GET>
+          <label>Address id</label>
+          <input name="address_id"/>
+          <input type=submit value="Vendors for a given address."/>
+        </form>
+      </li>
+      <li>
+        <form action="/vendors/user_address" method=GET>
+          <label>Venor id</label>
+          <input name="vendor_id"/>
+          <label>User id</label>
+          <input name="user_id"/>
+          <input type=submit value="Address of the User for as seen by the Vendor"/>
+        </form>
+      </li>
+    </ol>
+  </body>
+</html>
