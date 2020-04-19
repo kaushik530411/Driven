@@ -15,3 +15,8 @@ def views(bp):
         with get_db() as conn:
             rows = viewUsersHelper(conn)
         return render_template("table.html", name="Users", rows=rows)
+
+    @bp.route("/users/add", methods = ['POST', 'GET'])
+    def renderAddUsersForm():
+        attributes = {"First Name" : "text", "Last Name": "text", "Email" : "Text", "Phone" : "Text" }
+        return render_template("form.html", name="Add Users: ", URI="/boats/add/submit",  submit_message="Add User", attributes=attributes)
