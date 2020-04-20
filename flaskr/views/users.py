@@ -25,6 +25,14 @@ def deleteUserFromDB(conn, user_id):
     "DELETE FROM Users WHERE user_id = :user_id;", {'user_id': user_id}
     )
 
+def getAllAddressesForUserHelper(conn, user_id):
+    if user_id in ("", None):
+        raise Exception
+    return execute(
+    conn,
+    "SELECT DISTINCT Users.user_id, Users.fname, Users.lname, Address.address_id, Address.address, Address.start_date, Address.end_date FROM (Address INNER JOIN Users ON Address.user_id = Users.user_id) WHERE Users.user_id = :user_id;", {'user_id': user_id}
+    )
+
 #  RenderFunctions
 def views(bp):
     @bp.route("/users")
@@ -61,3 +69,13 @@ def views(bp):
             except Exception:
                 return render_template("form_error.html", errors=["Your deletion did not went through check your inputs again."])
         return viewUsers()
+
+    @bp.route("/users/addresses")
+    def getAllAddressesForUser():
+        with get_db() as conn:
+            user_id = request.args.get("UserId")
+            try:
+                rows = getAllAddressesForUserHelper(conn, user_id)
+            except Exception:
+                return render_template("form_error.html", errors=["Your request did not went through check your inputs again."])
+        return render_template("table.html", name="Addresses for the User : " + user_id, rows=rows)
