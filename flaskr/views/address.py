@@ -11,7 +11,7 @@ def viewAddressHelper(conn):
 def insertAddressInDB(conn, user_id, address, start_date, end_date):
     print(user_id, address, start_date, end_date)
     invalid = ("", None)
-    if not user_id or address in invalid:
+    if not user_id or address in invalid or user_id in invalid:
         raise Exception
     return execute(
     conn,
