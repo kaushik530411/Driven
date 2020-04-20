@@ -18,6 +18,13 @@ def insertAddressVendorInDB(conn, vendor_id, address_id):
     "INSERT INTO AddressVendorsMap (vendor_id, address_id, vendor_access) VALUES (:vendor_id, :address_id, :vendor_access);", {'vendor_id': vendor_id, 'address_id': address_id, 'vendor_access': vendor_access}
     )
 
+def deleteVendorAddressAssociationFromDB(conn, vendor_id, address_id):
+    if address_id in ("", None) and vendor_id in ("", None):
+        raise Exception
+    return execute(
+    conn,
+    "DELETE FROM AddressVendorsMap WHERE address_id = :address_id AND vendor_id = :vendor_id;", {'address_id': address_id, 'vendor_id': vendor_id}
+    )
 #  RenderFunctions
 def views(bp):
     @bp.route("/addressvendorsmap")
@@ -40,4 +47,16 @@ def views(bp):
                 insertAddressVendorInDB(conn, vendor_id, address_id)
             except Exception:
                 return render_template("form_error.html", errors=["Your insertions did not went through check your inputs again."])
+        return viewAddressVendorsMap()
+
+    @bp.route("/addressvendorsmap/remove")
+    def removeVendorAddressAssociation():
+        with get_db() as conn:
+            vendor_id = request.args.get("VendorId")
+            address_id = request.args.get("AddressId")
+            print("Vendor ID", vendor_id)
+            try:
+                deleteVendorAddressAssociationFromDB(conn, vendor_id, address_id)
+            except Exception:
+                return render_template("form_error.html", errors=["Your deletion did not went through check your inputs again."])
         return viewAddressVendorsMap()
