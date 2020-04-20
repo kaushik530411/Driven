@@ -17,5 +17,6 @@ def execute(conn, stmt, *args, **kwargs):
 
 def sqlite_execute(conn, stmt, *args, **kwargs):
     cursor = conn.cursor()
+    cursor.execute("PRAGMA foreign_keys=ON;")
     cursor.execute(stmt, *args, **kwargs)
     return [dict(r) for r in cursor.fetchall()]
