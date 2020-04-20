@@ -18,6 +18,14 @@ def insertVendorInDB(conn, vendor_name, phone):
     "INSERT INTO Vendors (vendor_name, phone) VALUES (:vendor_name, :phone);", {'vendor_name': vendor_name, 'phone': phone}
     )
 
+def deleteVendorFromDB(conn, vendor_id):
+    if vendor_id in ("", None):
+        raise Exception
+    return execute(
+    conn,
+    "DELETE FROM Vendors WHERE vendor_id = :vendor_id;", {'vendor_id': vendor_id}
+    )
+
 #  RenderFunctions
 def views(bp):
     @bp.route("/vendors")
@@ -40,4 +48,15 @@ def views(bp):
                 insertVendorInDB(conn, vendor_name, phone)
             except Exception:
                 return render_template("form_error.html", errors=["Your insertions did not went through check your inputs again."])
+        return viewVendors()
+
+    @bp.route("/vendors/remove")
+    def removeVendor():
+        with get_db() as conn:
+            vendor_id = request.args.get("VendorId")
+            print("Vendor ID", vendor_id)
+            try:
+                deleteVendorFromDB(conn, vendor_id)
+            except Exception:
+                return render_template("form_error.html", errors=["Your deletion did not went through check your inputs again."])
         return viewVendors()
