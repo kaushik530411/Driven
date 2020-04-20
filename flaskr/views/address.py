@@ -26,6 +26,14 @@ def deleteAddressFromDB(conn, address_id):
     "DELETE FROM Address WHERE address_id = :address_id;", {'address_id': address_id}
     )
 
+def getAllVendprsForAddressHelper(conn, address_id):
+    if address_id in ("", None):
+        raise Exception
+    return execute(
+    conn,
+    "SELECT AddressVendorsMap.address_id, Address.address, AddressVendorsMap.vendor_id, Vendors.vendor_name , AddressVendorsMap.vendor_access FROM ((AddressVendorsMap INNER JOIN Vendors ON AddressVendorsMap.vendor_id = Vendors.vendor_id) INNER JOIN Address ON AddressVendorsMap.address_id = Address.address_id) WHERE AddressVendorsMap.address_id = :address_id;", {'address_id': address_id}
+    )
+    
 #  RenderFunctions
 def views(bp):
     @bp.route("/address")
@@ -62,3 +70,13 @@ def views(bp):
             except Exception:
                 return render_template("form_error.html", errors=["Your deletion did not went through check your inputs again."])
         return viewAddress()
+
+    @bp.route("/address/vendors")
+    def getAllVendprsForAddress():
+        with get_db() as conn:
+            address_id = request.args.get("AddressId")
+            try:
+                rows = getAllVendprsForAddressHelper(conn, address_id)
+            except Exception:
+                return render_template("form_error.html", errors=["Your request did not went through check your inputs again."])
+        return render_template("table.html", name="Vendors for the Address : " + address_id, rows=rows)
