@@ -33,6 +33,15 @@ def revokeVendorAddressAssociationFromDB(conn, vendor_id, address_id):
     conn,
     "UPDATE AddressVendorsMap SET vendor_access = 0 WHERE address_id = :address_id AND vendor_id = :vendor_id;", {'address_id': address_id, 'vendor_id': vendor_id}
     )
+
+def grantVendorAddressAssociationFromDB(conn, vendor_id, address_id):
+    if address_id in ("", None) and vendor_id in ("", None):
+        raise Exception
+    return execute(
+    conn,
+    "UPDATE AddressVendorsMap SET vendor_access = 1 WHERE address_id = :address_id AND vendor_id = :vendor_id;", {'address_id': address_id, 'vendor_id': vendor_id}
+    )
+
 #  RenderFunctions
 def views(bp):
     @bp.route("/addressvendorsmap")
@@ -69,7 +78,7 @@ def views(bp):
                 return render_template("form_error.html", errors=["Your deletion did not went through check your inputs again."])
         return viewAddressVendorsMap()
 
-    @bp.route("/addressvendorsmap/revoke")
+    @bp.route("/addressvendorsmap/revoke_access")
     def revokeVendorAddressAssociation():
         with get_db() as conn:
             vendor_id = request.args.get("VendorId")
@@ -77,6 +86,18 @@ def views(bp):
             print("Vendor ID", vendor_id)
             try:
                 revokeVendorAddressAssociationFromDB(conn, vendor_id, address_id)
+            except Exception:
+                return render_template("form_error.html", errors=["Your deletion did not went through check your inputs again."])
+        return viewAddressVendorsMap()
+
+    @bp.route("/addressvendorsmap/grant_access")
+    def grantVendorAddressAssociation():
+        with get_db() as conn:
+            vendor_id = request.args.get("VendorId")
+            address_id = request.args.get("AddressId")
+            print("Vendor ID", vendor_id)
+            try:
+                grantVendorAddressAssociationFromDB(conn, vendor_id, address_id)
             except Exception:
                 return render_template("form_error.html", errors=["Your deletion did not went through check your inputs again."])
         return viewAddressVendorsMap()

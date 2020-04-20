@@ -44,12 +44,21 @@
         </form>
       </li>
       <li>
-        <form action="/addressvendorsmap/revoke" method=GET>
+        <form action="/addressvendorsmap/revoke_access" method=GET>
           <label>VendorId</label>
           <input name="VendorId"/>
           <label>AddressId</label>
           <input name="AddressId"/>
           <input type=submit value="Revoke access for the Vendor."/>
+        </form>
+      </li>
+      <li>
+        <form action="/addressvendorsmap/grant_access" method=GET>
+          <label>VendorId</label>
+          <input name="VendorId"/>
+          <label>AddressId</label>
+          <input name="AddressId"/>
+          <input type=submit value="Grant access for the Vendor."/>
         </form>
       </li>
     </ol>
