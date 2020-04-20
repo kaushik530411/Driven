@@ -10,7 +10,8 @@ def viewUsersHelper(conn):
 
 def insertUserInDB(conn, fname, lname, email, phone):
     print(fname, lname, email, phone)
-    if fname == None or lname == None or email == None:
+    invalid = ("", None)
+    if fname in invalid or lname in invalid or email in invalid:
         raise Exception
     return execute(
     conn,
