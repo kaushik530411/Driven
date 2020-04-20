@@ -22,14 +22,14 @@
         </form>
       </li>
       <li>
-        <form action="/address/remove" method=POST>
-          <label>Address id </label>
-          <input name="address_id"/>
+        <form action="/address/remove" method=GET>
+          <label>AddressId</label>
+          <input name="AddressId"/>
           <input type=submit value="Remove an Address for a user."/>
         </form>
       </li>
       <li>
-        <form action="/vendors/remove" method=POST>
+        <form action="/vendors/remove" method=GET>
           <label>Vendor id </label>
           <input name="vendor_id"/>
           <input type=submit value="Remove a Vendor"/>
@@ -44,7 +44,7 @@
         </form>
       </li>
       <li>
-        <form action="users/addressvendorsmap/revoke" method=POST>
+        <form action="users/addressvendorsmap/revoke" method=GET>
           <label>Address id</label>
           <input name="address_id"/>
           <label>Vendor id</label>

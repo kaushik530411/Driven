@@ -18,6 +18,14 @@ def insertAddressInDB(conn, user_id, address, start_date, end_date):
     "INSERT INTO Address (user_id, address, start_date, end_date) VALUES (:user_id, :address, :start_date, :end_date);", {'user_id': user_id, 'address': address, 'start_date': start_date, 'end_date': end_date}
     )
 
+def deleteAddressFromDB(conn, address_id):
+    if address_id in ("", None):
+        raise Exception
+    return execute(
+    conn,
+    "DELETE FROM Address WHERE address_id = :address_id;", {'address_id': address_id}
+    )
+
 #  RenderFunctions
 def views(bp):
     @bp.route("/address")
@@ -42,4 +50,15 @@ def views(bp):
                 insertAddressInDB(conn, user_id, address, start_date, end_date)
             except Exception:
                 return render_template("form_error.html", errors=["Your insertions did not went through check your inputs again."])
+        return viewAddress()
+
+    @bp.route("/address/remove")
+    def removeAddress():
+        with get_db() as conn:
+            address_id = request.args.get("AddressId")
+            print("Address ID", address_id)
+            try:
+                deleteAddressFromDB(conn, address_id)
+            except Exception:
+                return render_template("form_error.html", errors=["Your deletion did not went through check your inputs again."])
         return viewAddress()
