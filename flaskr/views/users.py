@@ -9,13 +9,20 @@ def viewUsersHelper(conn):
     return execute(conn, "SELECT user_id, fname, email, phone FROM Users")
 
 def insertUserInDB(conn, fname, lname, email, phone):
-    print(fname, lname, email, phone)
     invalid = ("", None)
     if fname in invalid or lname in invalid or email in invalid:
         raise Exception
     return execute(
     conn,
     "INSERT INTO Users (fname, lname, email, phone) VALUES (:fname, :lname, :email, :phone);", {'fname': fname, 'lname': lname, 'email': email, 'phone': phone}
+    )
+
+def deleteUserFromDB(conn, user_id):
+    if user_id in ("", None):
+        raise Exception
+    return execute(
+    conn,
+    "DELETE FROM Users WHERE user_id = :user_id;", {'user_id': user_id}
     )
 
 #  RenderFunctions
@@ -42,4 +49,15 @@ def views(bp):
                 insertUserInDB(conn, fname, lname, email, phone)
             except Exception:
                 return render_template("form_error.html", errors=["Your insertions did not went through check your inputs again."])
+        return viewUsers()
+
+    @bp.route("/users/remove")
+    def removeUser():
+        with get_db() as conn:
+            user_id = request.args.get("UserId")
+            print("Here :",user_id)
+            try:
+                deleteUserFromDB(conn, user_id)
+            except Exception:
+                return render_template("form_error.html", errors=["Your deletion did not went through check your inputs again."])
         return viewUsers()
