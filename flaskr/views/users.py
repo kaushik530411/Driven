@@ -34,7 +34,6 @@ def views(bp):
     @bp.route("/users/add/submit", methods = ['POST', 'GET'])
     def addUsers():
         with get_db() as conn:
-            print("request", request.form.get("FirstName"))
             fname = request.form.get("FirstName")
             lname = request.form.get("LastName")
             email = request.form.get("Email")
