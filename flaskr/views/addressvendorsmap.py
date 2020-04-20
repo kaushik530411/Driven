@@ -8,6 +8,16 @@ from flaskr.db import get_db, execute
 def viewAddressVendorsMapHelper(conn):
     return execute(conn, "SELECT vendor_id, address_id, vendor_access FROM AddressVendorsMap")
 
+def insertAddressVendorInDB(conn, vendor_id, address_id):
+    print(vendor_id, address_id)
+    vendor_access = 1
+    # if vendor_id or not address:
+    #     raise Exception
+    return execute(
+    conn,
+    "INSERT INTO AddressVendorsMap (vendor_id, address_id, vendor_access) VALUES (:vendor_id, :address_id, :vendor_access);", {'vendor_id': vendor_id, 'address_id': address_id, 'vendor_access': vendor_access}
+    )
+
 #  RenderFunctions
 def views(bp):
     @bp.route("/addressvendorsmap")
@@ -15,3 +25,19 @@ def views(bp):
         with get_db() as conn:
             rows = viewAddressVendorsMapHelper(conn)
         return render_template("table.html", name="AddressVendorsMap", rows=rows)
+
+    @bp.route("/addressvendorsmap/add", methods = ['POST', 'GET'])
+    def renderAddAddressVendorsMapForm():
+        attributes = {"VendorId" : "number", "AddressId": "number" }
+        return render_template("form.html", name="Add a Vendor for an Address: ", URI="/addressvendorsmap/add/submit",  submit_message="Add Vendor for the address", attributes=attributes)
+
+    @bp.route("/addressvendorsmap/add/submit", methods = ['POST', 'GET'])
+    def AddAddressVendorsMap():
+        with get_db() as conn:
+            vendor_id = request.form.get("VendorId")
+            address_id = request.form.get("AddressId")
+            try:
+                insertAddressVendorInDB(conn, vendor_id, address_id)
+            except Exception:
+                return render_template("form_error.html", errors=["Your insertions did not went through check your inputs again."])
+        return viewAddressVendorsMap()
