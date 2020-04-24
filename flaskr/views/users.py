@@ -3,6 +3,7 @@ from flask import render_template
 from flask import request
 from flask import escape
 from flaskr.db import get_db, execute
+from flask import redirect
 
 #  HelperFunctions
 def viewUsersHelper(conn):
@@ -31,6 +32,14 @@ def getAllAddressesForUserHelper(conn, user_id):
     return execute(
     conn,
     "SELECT DISTINCT Users.user_id, Users.fname, Users.lname, Address.address_id, Address.address, Address.start_date, Address.end_date FROM (Address INNER JOIN Users ON Address.user_id = Users.user_id) WHERE Users.user_id = :user_id;", {'user_id': user_id}
+    )
+
+def changeAddressForAUserHelper(conn, address_id, address):
+    if address_id in ("", None) or address_id in ("", None):
+        raise Exception
+    return execute(
+    conn,
+    "UPDATE Address SET address = :address WHERE address_id = :address_id;", {'address_id' : address_id, 'address' : address}
     )
 
 #  RenderFunctions
@@ -79,3 +88,16 @@ def views(bp):
             except Exception:
                 return render_template("form_error.html", errors=["Your request did not went through check your inputs again."])
         return render_template("table.html", name="Addresses for the User : " + user_id, rows=rows)
+
+    @bp.route("/users/address/change")
+    def changeAddressForAUser():
+        with get_db() as conn:
+            address_id = request.args.get("AddressId")
+            address = request.args.get("address")
+            print("Here ", address_id, address)
+            try:
+                rows = changeAddressForAUserHelper(conn, address_id, address)
+            except Exception:
+                return render_template("form_error.html", errors=["Your request did not went through check your inputs again."])
+        # return render_template("table.html", name="Address " + address_id + " changed.", rows=rows)
+        return redirect('/address')

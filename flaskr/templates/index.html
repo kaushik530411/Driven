@@ -11,6 +11,15 @@
       <li><a href="/address/add">Add an Address for a user</a></li>
       <li><a href="/vendors/add">Add a Vendor</a></li>
       <li><a href="/addressvendorsmap/add">Add a Vendor for an Address</a></li>
+      <li>
+        <form action="/users/address/change" method=GET>
+          <label>AddressId </label>
+          <input name="AddressId"/>
+          <label>NewAddress </label>
+          <input name="address"/>
+          <input type=submit value="Change a User's address."/>
+        </form>
+      </li>
     </ol>
     <h2>Remove Operations</h2>
     <ol>
