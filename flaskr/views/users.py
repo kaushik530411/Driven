@@ -99,5 +99,4 @@ def views(bp):
                 rows = changeAddressForAUserHelper(conn, address_id, address)
             except Exception:
                 return render_template("form_error.html", errors=["Your request did not went through check your inputs again."])
-        # return render_template("table.html", name="Address " + address_id + " changed.", rows=rows)
         return redirect('/address')
